@@ -34,7 +34,6 @@
 	//antag stuff//
 	antagonist.forge_objectives(obsession.mind)
 	antagonist.greet()
-	RegisterSignal(owner, COMSIG_CARBON_HELPED, PROC_REF(on_hug))
 
 /datum/brain_trauma/special/obsessed/on_life(seconds_per_tick, times_fired)
 	if(!obsession || obsession.stat == DEAD)

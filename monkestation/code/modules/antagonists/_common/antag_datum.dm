@@ -25,3 +25,9 @@
 		if(rendered_outfit)
 			return image(rendered_outfit)
 	return image('icons/effects/effects.dmi', icon_state = "static", layer = FLOAT_LAYER)
+
+/datum/antagonist/proc/is_objectives_completed()
+	for(var/datum/objective/must_be_done as anything in objectives)
+		if(!must_be_done.check_completion())
+			return FALSE
+	return TRUE

@@ -8,9 +8,15 @@
 	roundend_category = "obsessed"
 	count_against_dynamic_roll_chance = FALSE
 	silent = TRUE //not actually silent, because greet will be called by the trauma anyway.
-	suicide_cry = "FOR MY LOVE!!"
+	suicide_cry = "DIE!!"
 	preview_outfit = /datum/outfit/obsessed
 	var/datum/brain_trauma/special/obsessed/trauma
+/datum/antagonist/obsessed/proc/create_sniff
+    sniff = new(src)
+    sniff.Grant(owner.current)
+
+/datum/antagonist/obsessed/on_gain()
+  create_sniff()
 
 /datum/antagonist/obsessed/admin_add(datum/mind/new_owner,mob/admin)
 	var/mob/living/carbon/C = new_owner.current
@@ -250,19 +256,14 @@
 	else
 		explanation_text = "Free Objective"
 
-/datum/action/cooldown/track_target
+/datum/action/cooldown/sniff
 	name = "Sniff"
 	desc = "LMB: Sniffs the air for your target."
 	check_flags = AB_CHECK_CONSCIOUS
 	button_icon_state = "nose"
 	cooldown_time = 4 SECONDS
-/datum/action/cooldown/track_target/Grant(mob/granted)
-	if(!ROLE_OBSESSED(granted))
-		return
 
-	return ..()
-
-/datum/action/cooldown/track_target/proc/get_balloon_message(mob/living/carbon/human/tracked_mob)
+/datum/action/cooldown/sniff/proc/get_balloon_message(mob/living/carbon/human/tracked_mob)
 	var/balloon_message = "error text!"
 	var/turf/their_turf = get_turf(tracked_mob)
 	var/turf/our_turf = get_turf(owner)
@@ -320,21 +321,20 @@
 
 	return balloon_message
 
-/datum/action/cooldown/track_target/Activate(atom/target)
-	var/mob/living/carbon/human/tracked_mob = human_targets[last_tracked_name]
+/datum/action/cooldown/sniff/Activate(atom/target)
+	var/mob/living/carbon/human/tracked_mob = target
 	if(QDELETED(tracked_mob))
-		last_tracked_name = null
 		return FALSE
 
-	playsound(owner, 'sound/effects/singlebeat.ogg', 50, TRUE, SILENCED_SOUND_EXTRARANGE)
+	playsound(owner, 'sound/effects/real_big_sniffer.ogg', 50, TRUE, SILENCED_SOUND_EXTRARANGE)
 	owner.balloon_alert(owner, get_balloon_message(tracked_mob))
 
 	if(tracked_mob.stat == DEAD)
-		if(OBJECTIVE_STATE_COMPLETED)
+		if(is_objectives_completed())
 			to_chat(owner, span_hierophant("[tracked_mob] is dead. REJOICE!"))
-
-		else()
+		else
 			to_chat(owner, span_hierophant("[tracked_mob] is dead..."))
 
 		StartCooldown()
 		return TRUE
+
