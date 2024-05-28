@@ -11,12 +11,14 @@
 	suicide_cry = "DIE!!"
 	preview_outfit = /datum/outfit/obsessed
 	var/datum/brain_trauma/special/obsessed/trauma
-/datum/antagonist/obsessed/proc/create_sniff
-    sniff = new(src)
-    sniff.Grant(owner.current)
+
+/datum/antagonist/obsessed/proc/create_sniff()
+	var/datum/action/cooldown/sniff = new(src)
+	sniff.Grant(owner.current)
 
 /datum/antagonist/obsessed/on_gain()
-  create_sniff()
+	. = ..()
+	create_sniff()
 
 /datum/antagonist/obsessed/admin_add(datum/mind/new_owner,mob/admin)
 	var/mob/living/carbon/C = new_owner.current
