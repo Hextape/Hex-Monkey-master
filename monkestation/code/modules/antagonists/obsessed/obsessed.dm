@@ -12,6 +12,7 @@
 	preview_outfit = /datum/outfit/obsessed
 	var/datum/brain_trauma/special/obsessed/trauma
 
+
 /datum/antagonist/obsessed/proc/create_sniff()
 	var/datum/action/cooldown/sniff = new(src)
 	sniff.Grant(owner.current)
@@ -319,7 +320,7 @@
 				balloon_message = "very far!"
 
 	if(tracked_mob.stat == DEAD)
-		balloon_message = "they're dead, " + balloon_message
+		balloon_message = "they're dead, REJOICE!"
 
 	return balloon_message
 
@@ -328,15 +329,7 @@
 	if(QDELETED(tracked_mob))
 		return FALSE
 
-	playsound(owner, 'sound/effects/real_big_sniffer.ogg', 50, TRUE, SILENCED_SOUND_EXTRARANGE)
+	playsound(owner, 'sound/effects/real_big_snifffer.ogg', 50, TRUE, SILENCED_SOUND_EXTRARANGE)
 	owner.balloon_alert(owner, get_balloon_message(tracked_mob))
-
-	if(tracked_mob.stat == DEAD)
-		if(is_objectives_completed())
-			to_chat(owner, span_hierophant("[tracked_mob] is dead. REJOICE!"))
-		else
-			to_chat(owner, span_hierophant("[tracked_mob] is dead..."))
-
-		StartCooldown()
-		return TRUE
+	StartCooldown()
 
